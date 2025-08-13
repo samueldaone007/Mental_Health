@@ -3,21 +3,13 @@ import pandas as pd
 import joblib
 import openai
 
-# ───────────────────────
-# 🔐 Set up Groq API
-# ───────────────────────
+
 openai.api_key = "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"  # ← Replace this with your real key
 openai.api_base = "https://api.groq.com/openai/v1"  # Groq's OpenAI-compatible endpoint
 
-# ───────────────────────
-# 🧠 Load model & encoder
-# ───────────────────────
 encoder = joblib.load('encoder_pipeline.pkl')
 model = joblib.load('model.pkl')  # Your trained mental health prediction model
 
-# ───────────────────────
-# 🎛 Input Fields
-# ───────────────────────
 fields = [
     "Sadness", "Euphoric", "Exhausted", "Sleep dissorder", "Mood Swing",
     "Suicidal thoughts", "Anorxia", "Authority Respect", "Try-Explanation",
@@ -26,9 +18,6 @@ fields = [
 ]
 rating_fields = ["Sexual Activity", "Concentration", "Optimisim"]
 
-# ───────────────────────
-# 🧾 Form UI
-# ───────────────────────
 st.title("🧠 Mental Health Diagnosis Predictor")
 st.write("Fill in the symptoms and behaviors below to get a predicted mental health diagnosis.")
 
@@ -44,9 +33,6 @@ with st.form("diagnosis_form"):
 
     submit = st.form_submit_button("Predict Diagnosis")
 
-# ───────────────────────
-# 🔮 Prediction Logic
-# ───────────────────────
 if submit:
     input_df = pd.DataFrame([input_data])
     X_encoded = encoder.transform(input_df)
@@ -59,9 +45,6 @@ if submit:
     else:
         st.success("🩺 Predicted Diagnosis: Depression")
 
-# ───────────────────────
-# 💬 Groq Chatbot
-# ───────────────────────
 st.sidebar.title("💬 Mental Health Chatbot")
 st.sidebar.write("Ask about symptoms, disorders, or mental health support.")
 
@@ -88,4 +71,5 @@ if user_question:
         st.sidebar.markdown(f"**Bot:** {reply}")
     except Exception as e:
         st.sidebar.error(f"❌ Error from Groq API: {e}")
+
 
